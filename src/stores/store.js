@@ -3,12 +3,33 @@ import service from '../services/service';
 const state = {
     movies: []
 }
-const getters = {}
-const mutations = {}
+const getters = {
+    movies(state) {
+        return state.movies;
+    },
+    groupedMovies(state) {
+        const grouped = [];
+
+        state.movies.forEach((item, index) => {
+            if (index % 3 === 0) {
+                grouped.push([]);
+            }
+            grouped[grouped.length - 1].push(item);
+        });
+
+        return grouped;
+    },
+}
+
+const mutations = {
+    setMovies(state, movies) {
+        state.movies = movies;
+    }
+}
 const actions = {
-    fetchMovies() {
-        service.fetchMovies().then((res) => {
-            console.log(res.val());
+    fetchMovies(context) {
+        return service.fetchMovies().then((snapshot) => {
+            context.commit('setMovies', snapshot.val());
         })
     }
 }
